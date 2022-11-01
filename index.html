@@ -13,7 +13,7 @@
 
       const flanker_timeline = {
         timeline: [{
-          type: 'html-keyboard-response',
+          type: jsPsychHtmlKeyboardResponse,
           stimulus: jsPsych.timelineVariable('stimulus'),
           choices: ['F', 'J'],
           data: { 
@@ -33,7 +33,7 @@
       }
 
       const done = {
-        type: 'html-keyboard-response',
+        type: jsPsychHtmlKeyboardResponse,
         stimulus: 'Done!',
         choices: "NO_KEYS",
         on_start: ()=>{
