@@ -35,7 +35,7 @@
       const done = {
         type: 'html-keyboard-response',
         stimulus: 'Done!',
-        choices: jsPsych.NO_KEYS,
+        choices: "NO_KEYS",
         on_start: ()=>{
           fetch('https://us-central1-osf-relay.cloudfunctions.net/api', {
             method: 'POST',
