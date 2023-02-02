@@ -3,6 +3,7 @@
   <head>
     <script src="https://unpkg.com/jspsych@7.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-sketchpad"></script>
     <link
       rel="stylesheet"
       href="https://unpkg.com/jspsych@7.3/css/jspsych.css"
@@ -62,6 +63,30 @@
         repetitions: 3,
       };
 
+      const sketchpad = {
+        type: jsPsychSketchpad,
+        prompt: '<p>Draw an apple!</p>',
+        prompt_location: 'abovecanvas',
+        canvas_width: 300,
+        canvas_height: 300,
+        canvas_border_width: 2,
+        on_finish: (data) => {
+          fetch("https://datapipe-test.web.app/api/base64/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "*/*",
+            },
+            body: JSON.stringify({
+              experimentID: "rpuf1rMWQZ4r",
+              filename: `${subject}_${condition}.png`,
+              data: data.png,
+            }),
+          });
+          data.png = null;
+        }
+      }
+
       const done = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: "Done!",
@@ -82,7 +107,7 @@
         },
       };
 
-      jsPsych.simulate([flanker_timeline, done]);
+      jsPsych.simulate([flanker_timeline, sketchpad, done]);
     };
 
     getCondition().then(createExperiment);
