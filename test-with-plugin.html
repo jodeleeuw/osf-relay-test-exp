@@ -27,7 +27,7 @@
     const condition_pipe = {
       type: jsPsychPipe,
       action: "condition",
-      experimentID: "rpuf1rMWQZ4r",
+      experiment_id: "rpuf1rMWQZ4r",
       on_finish: function(data){
         condition = data.condition;
         jsPsych.data.addProperties({
@@ -85,7 +85,7 @@
     const savebase64 = {
       type: jsPsychPipe,
       action: "saveBase64",
-      experimentID: "rpuf1rMWQZ4r",
+      experiment_id: "rpuf1rMWQZ4r",
       filename: ()=>`${subject}_${condition}.png`,
       data_string: ()=>jsPsych.data.get().last(1).values()[0].png,
     };
@@ -95,7 +95,7 @@
       action: "save",
       data_string: jsPsych.data.get().csv(),
       filename: ()=>`${subject}_${condition}.csv`,
-      experimentID: "rpuf1rMWQZ4r",
+      experiment_id: "rpuf1rMWQZ4r",
     };
 
     const done = {
