@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/jspsych@7.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-sketchpad"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/jspsych@7.3/css/jspsych.css"
+    />
+  </head>
+  <body></body>
+  <script>
+    const jsPsych = initJsPsych();
+
+    const subject = jsPsych.randomization.randomID(10);
+
+    jsPsych.data.addProperties({
+      subject: subject,
+    });
+
+    const timeline = [];
+
+    let condition = null;
+
+    const condition_pipe = {
+      type: jsPsychPipe,
+      action: "condition",
+      experimentID: "rpuf1rMWQZ4r",
+      on_finish: function(data){
+        condition = data.condition;
+        jsPsych.data.addProperties({
+          condition: data.condition
+        });
+      }
+    }
+
+    const flanker_timeline = {
+      timeline: [
+        {
+          type: jsPsychHtmlKeyboardResponse,
+          stimulus: jsPsych.timelineVariable("stimulus"),
+          choices: ["F", "J"],
+          data: {
+            congruency: jsPsych.timelineVariable("congruency"),
+            direction: jsPsych.timelineVariable("direction"),
+            task: "flanker",
+          },
+        },
+      ],
+      timeline_variables: [
+        { stimulus: "<<<<<", congruency: "congruent", direction: "left" },
+        { stimulus: ">>>>>", congruency: "congruent", direction: "right" },
+        { stimulus: "<<><<", congruency: "incongruent", direction: "right" },
+        { stimulus: ">><>>", congruency: "incongruent", direction: "left" },
+      ],
+      randomize_order: true,
+      repetitions: 3,
+    };
+
+    const sketchpad = {
+      type: jsPsychSketchpad,
+      prompt: "<p>Draw an apple!</p>",
+      prompt_location: "abovecanvas",
+      canvas_width: 300,
+      canvas_height: 300,
+      canvas_border_width: 2,
+      on_finish: (data) => {
+        fetch("https://datapipe-test.web.app/api/base64/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+          },
+          body: JSON.stringify({
+            experimentID: "rpuf1rMWQZ4r",
+            filename: `${subject}_${condition}.png`,
+            data: data.png,
+          }),
+        });
+      },
+    };
+
+    const savebase64 = {
+      type: jsPsychPipe,
+      action: "saveBase64",
+      experimentID: "rpuf1rMWQZ4r",
+      filename: ()=>`${subject}_${condition}.png`,
+      data_string: ()=>jsPsych.data.get().last(1).values()[0].png,
+    };
+
+    const save = {
+      type: jsPsychPipe,
+      action: "save",
+      data_string: jsPsych.data.get().csv(),
+      filename: ()=>`${subject}_${condition}.csv`,
+      experimentID: "rpuf1rMWQZ4r",
+    };
+
+    const done = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "Done!",
+      choices: "NO_KEYS",
+      simulation_options: {
+        simulate: false
+      }
+    };
+
+    jsPsych.simulate([condition_pipe, flanker_timeline, sketchpad, savebase64, save, done]);
+  </script>
+</html>
