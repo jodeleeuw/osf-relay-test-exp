@@ -15,23 +15,22 @@
     const jsPsych = initJsPsych();
 
     const subject = jsPsych.randomization.randomID(10);
+    let condition = null;
 
     jsPsych.data.addProperties({
       subject: subject,
     });
 
-    const timeline = [];
-
-    let condition = null;
+    const timeline = [];    
 
     const condition_pipe = {
       type: jsPsychPipe,
       action: "condition",
       experiment_id: "LZanzIcb9bu2",
       on_finish: function(data){
-        condition = data.condition;
+        condition = data.result;
         jsPsych.data.addProperties({
-          condition: data.condition
+          condition: data.result
         });
       }
     }
@@ -79,7 +78,7 @@
     const save = {
       type: jsPsychPipe,
       action: "save",
-      data_string: jsPsych.data.get().csv(),
+      data_string: ()=>jsPsych.data.get().csv(),
       filename: ()=>`${subject}_${condition}.csv`,
       experiment_id: "LZanzIcb9bu2",
     };
