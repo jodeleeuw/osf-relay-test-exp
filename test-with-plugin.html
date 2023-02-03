@@ -27,7 +27,7 @@
     const condition_pipe = {
       type: jsPsychPipe,
       action: "condition",
-      experiment_id: "rpuf1rMWQZ4r",
+      experiment_id: "LZanzIcb9bu2",
       on_finish: function(data){
         condition = data.condition;
         jsPsych.data.addProperties({
@@ -66,26 +66,12 @@
       canvas_width: 300,
       canvas_height: 300,
       canvas_border_width: 2,
-      on_finish: (data) => {
-        fetch("https://datapipe-test.web.app/api/base64/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "*/*",
-          },
-          body: JSON.stringify({
-            experimentID: "rpuf1rMWQZ4r",
-            filename: `${subject}_${condition}.png`,
-            data: data.png,
-          }),
-        });
-      },
     };
 
     const savebase64 = {
       type: jsPsychPipe,
       action: "saveBase64",
-      experiment_id: "rpuf1rMWQZ4r",
+      experiment_id: "LZanzIcb9bu2",
       filename: ()=>`${subject}_${condition}.png`,
       data_string: ()=>jsPsych.data.get().last(1).values()[0].png,
     };
@@ -95,7 +81,7 @@
       action: "save",
       data_string: jsPsych.data.get().csv(),
       filename: ()=>`${subject}_${condition}.csv`,
-      experiment_id: "rpuf1rMWQZ4r",
+      experiment_id: "LZanzIcb9bu2",
     };
 
     const done = {
